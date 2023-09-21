@@ -1,5 +1,6 @@
 # FUCoroutine
 It's just fxxking same as Unity Coroutine.
+It's a plugin for Godot Engine.
 
 # Features
 
