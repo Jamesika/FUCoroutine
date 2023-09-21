@@ -1,0 +1,10 @@
+<Project Sdk="Godot.NET.Sdk/4.1.1">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.89.9.1" />
+  </ItemGroup>
+</Project>

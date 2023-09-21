@@ -1,0 +1,31 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="FUCoroutine"
+run/main_scene="res://example_entry.tscn"
+config/features=PackedStringArray("4.1", "C#", "Forward Plus")
+config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="Snake"
+
+[editor_plugins]
+
+enabled=PackedStringArray()
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+anti_aliasing/quality/msaa_2d=1
+anti_aliasing/quality/msaa_3d=1
+anti_aliasing/quality/screen_space_aa=1
