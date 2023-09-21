@@ -98,7 +98,13 @@ namespace FUCoroutine
         {
             if (!GodotObject.IsInstanceValid(node))
             {
-                LogError("node is not valid!");
+                LogError("Node is not valid!");
+                return null;
+            }
+
+            if (!node.IsInsideTree())
+            {
+                LogError("Cannot StartCoroutine on node outside the SceneTree");
                 return null;
             }
 
