@@ -10,8 +10,8 @@ public partial class ExampleNode : Node
 {
     public void Example()
     {
-        _coroutineHandler = CoroutineManager.StartCoroutine(CustomCoroutine());
-        CoroutineManager.StopCoroutine(_coroutineHandler);
+        var coroutineHandler = CoroutineManager.StartCoroutine(CustomCoroutine());
+        CoroutineManager.StopCoroutine(coroutineHandler);
     }
 }
 ```
@@ -22,12 +22,13 @@ public partial class ExampleNode : Node
 {
     public void Example()
     {
-        _coroutineHandler = this.StartCoroutine(CustomCoroutine());
-        this.StopCoroutine(_coroutineHandler);
+        var coroutineHandler = this.StartCoroutine(CustomCoroutine());
+        this.StopCoroutine(coroutineHandler);
     }
 }
 ```
 - If the node is free or remove from tree, the coroutine will be automaticlly stopped.
+- If the node is paused (`GetTree().Paused = true`), the coroutine will be paused, too.
 
 ## Wait For XXX
 ```csharp
@@ -47,16 +48,25 @@ public IEnumerator Example()
     // Same as Unity
     yield return new WaitForSeconds(1.0);
 
-    // Same as Unity, ignore Godot.Engine.TimeScale
+    // Same as Unity, ignore Godot.Engine.TimeScale. **but if TimeScale is zero, WaitForSecondsRealtime will be paused.**
     yield return new WaitForSecondsRealtime(1.0);
 
     // Same as Unity
-    yield return new WaitUtil(() => Validate());
+    yield return new WaitUtil(Validate());
 
     // Same as Unity
-    yield return new WaitWhile(() => Validate());
+    yield return new WaitWhile(Validate());
 }
 ```
 
-## TODO 
-- Make coroutines on node pausable while the node is paused.
+## Custom Wait For Something
+
+```csharp
+public class WaitForSomething : YieldInstruction
+{
+    public override bool IsComplete()
+    {
+        // Is it completed ?
+    }
+}
+```

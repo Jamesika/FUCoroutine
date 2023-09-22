@@ -17,6 +17,9 @@ namespace FUCoroutine
         {
         }
         
+        /// <summary>
+        /// Will call this when node is not paused
+        /// </summary>
         public virtual void Tick(double delta)
         {
         }
