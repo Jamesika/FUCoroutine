@@ -64,6 +64,20 @@ namespace FUCoroutine
                 if (IsCompleted)
                     return;
 
+                if (IsBindingNode)
+                {
+                    if (!IsBindingNodeValid)
+                    {
+                        GD.PrintErr("Node is not valid!");
+                        Complete();
+                        return;
+                    }
+
+                    // Pause coroutine when node is paused
+                    if (IsNodePaused(Node))
+                        return;
+                }
+                
                 // Tick Inner Coroutine
                 if (_innerCoroutine != null && _innerCoroutine._isNested)
                 {
@@ -120,6 +134,29 @@ namespace FUCoroutine
                         _tickOrder = CoroutineTickOrder.Process;
                     }
                 }
+            }
+
+            private bool IsNodePaused(Node node)
+            {
+                var treePaused = Node.GetTree().Paused;
+                
+                // get parent util ProcessMode is not Inherit
+                while (node.ProcessMode == ProcessModeEnum.Inherit)
+                {
+                    var parentNode = node.GetParent();
+                    if (parentNode != null)
+                        node = parentNode;
+                    else
+                        break;
+                }
+
+                var processMode = node.ProcessMode;
+                if (processMode == ProcessModeEnum.Inherit)
+                    processMode = ProcessModeEnum.Pausable;
+
+                return treePaused && processMode == ProcessModeEnum.Pausable ||
+                       !treePaused && processMode == ProcessModeEnum.WhenPaused ||
+                       processMode == ProcessModeEnum.Disabled;
             }
         }
     }

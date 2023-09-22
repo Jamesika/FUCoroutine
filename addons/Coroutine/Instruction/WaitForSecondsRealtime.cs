@@ -1,29 +1,43 @@
 using System;
+using System.Collections;
+using System.Threading;
 using Godot;
 
 namespace FUCoroutine
 {
+    /// <summary>
+    /// If the binding node is not paused, WaitForSecondsRealtime will be paused only when TimeScale == 0!
+    /// </summary>
     public class WaitForSecondsRealtime : YieldInstruction
     {
         private double _originSeconds;
-        private ulong _beginTimeMsec;
+        private double _leftSeconds;
         
         public WaitForSecondsRealtime(double seconds)
         {
             _originSeconds = seconds;
-            _beginTimeMsec = Time.GetTicksMsec();
+            _leftSeconds = seconds;
         }
 
         public override void Reset()
         {
             base.Reset();
-            _beginTimeMsec = Time.GetTicksMsec();
+            _leftSeconds = _originSeconds;
         }
- 
+
+        public override void Tick(double delta)
+        {
+            base.Tick(delta);
+            if (_leftSeconds > 0)
+            {
+                if (!Mathf.IsZeroApprox(Engine.TimeScale))
+                    _leftSeconds -= delta / Engine.TimeScale;
+            }
+        }
+
         public override bool IsComplete()
         {
-            var passedTime = Time.GetTicksMsec() - _beginTimeMsec;
-            return passedTime > _originSeconds * 1000;
+            return _leftSeconds <= 0;
         }
     }
 }

@@ -10,7 +10,18 @@ namespace FUCoroutine.Example;
 public partial class ExampleEntry : Node
 {
     private ICoroutineHandler _coroutineHandler;
-    
+
+    public override void _Ready()
+    {
+        base._Ready();
+        
+        // Will be paused (Because coroutine bind paused node)
+        // this.StartCoroutine(ExamplePauseCoroutine());
+        
+        // Wont be paused
+        // CoroutineManager.StartCoroutine(ExamplePauseCoroutine());
+    }
+
     public override void _UnhandledKeyInput(InputEvent @event)
     {
         base._UnhandledKeyInput(@event);
@@ -127,6 +138,10 @@ public partial class ExampleEntry : Node
         Log("Wait 1s realtime begin");
         yield return new WaitForSecondsRealtime(1f);
         Log("Wait 1s realtime end");
+        yield return new WaitForSecondsRealtime(1f);
+        Log("Wait 1s realtime end");
+        yield return new WaitForSecondsRealtime(1f);
+        Log("Wait 1s realtime end");
         
         Log("Set timescale 1f");
         Engine.TimeScale = 1f;
@@ -147,10 +162,29 @@ public partial class ExampleEntry : Node
         Log("ExampleWaitForSecondsReuseObject End");
     }
     
+    #endregion
+
+    #region [Other Examples]
+
+    /// <summary>
+    /// It will be paused after 5 seconds
+    /// </summary>
+    private IEnumerator ExamplePauseCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(1f);
+            Log("Loop...");
+            
+            if (Time.GetTicksMsec() > 1000 * 5)
+                GetTree().Paused = true;
+        }
+    }
+
+    #endregion
+    
     private void Log(string info)
     {
         GD.Print($"[{Engine.GetProcessFrames()}][{Engine.GetPhysicsFrames()}] {info}");
     }
-
-    #endregion
 }
